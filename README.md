@@ -3,6 +3,43 @@
 A part of a shopping platform that calculates the price of products based on configurable discount policies. Each product in the system is identified by a UUID. Discounts can be applied either based
 on the number of items ordered (count-based discounts) or as a percentage of the total price (percentage-based discounts).
 
+## How to use
+
+It's possible to access the endpoint via Swagger. The service starts with some predefined data.
+
+#### To get product information
+
+```
+curl -X 'GET' \
+  'http://localhost:8080/products/c00ff428-40ed-45c0-af28-04f83fde7aa2' \
+  -H 'accept: application/json'
+```
+
+will respond with
+
+```json
+{
+   "id": "c00ff428-40ed-45c0-af28-04f83fde7aa2",
+   "name": "Duck",
+   "price": 100,
+   "description": "made of rubber"
+}
+```
+
+#### To calculate price
+
+```
+curl -X 'GET' \
+  'http://localhost:8080/products/a24df3b0-8f18-4403-b470-ecb5cd4a1ad2/calculate-price?quantity=50&discountPolicyType=COUNT_BASED' \
+  -H 'accept: application/json'
+```
+
+will respond with
+
+```json
+2250
+```
+
 ### Build and run
 
 1. Run `./gradlew bootBuildImage` from the project root. That will build `image 'docker.io/library/shopping-platform:0.0.1-SNAPSHOT'`.
