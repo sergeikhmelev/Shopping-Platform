@@ -25,7 +25,9 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody as SwaggerRequestBod
 	consumes = [MediaType.APPLICATION_JSON_VALUE],
 )
 @Validated
-class DiscountPolicyController {
+class DiscountPolicyController(
+	private val discountPolicyService: DiscountPolicyService,
+) {
 
 	@Operation(summary = "Updates fixed percentage-based discount policy")
 	@ApiResponses(
@@ -36,6 +38,10 @@ class DiscountPolicyController {
 	)
 	@PostMapping("/update-fixed-percentage-based")
 	fun updateFixedPercentageBased(@Valid @RequestBody discountPolicy: FixedPercentageBasedDiscountPolicyDto) {
+		discountPolicyService.updatePolicy(
+			DiscountPolicyType.FIXED_PERCENTAGE_BASED,
+			FixedPercentageBasedDiscountPolicy(discountPolicy.percentage)
+		)
 	}
 
 	@Operation(
@@ -53,6 +59,14 @@ class DiscountPolicyController {
 	@PostMapping("/update-count-based")
 	fun updateCountBased(@Valid @RequestBody discountPolicy: CountBasedDiscountPolicyDto) {
 		discountPolicy.verify()
+
+		discountPolicyService.updatePolicy(
+			DiscountPolicyType.COUNT_BASED,
+			CountBasedDiscountPolicy(
+				discountPolicy.discounts
+					.map { CountBasedDiscountPolicy.Discount(it.itemQuantity, it.percentage) }
+			)
+		)
 	}
 
 	private fun CountBasedDiscountPolicyDto.verify() {
