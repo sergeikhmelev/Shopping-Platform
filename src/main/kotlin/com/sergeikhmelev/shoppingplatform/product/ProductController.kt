@@ -41,7 +41,7 @@ class ProductController(
 			ApiResponse(responseCode = "404", description = "Product not found", content = [Content()])
 		]
 	)
-	@GetMapping("/{id}", consumes = [MediaType.APPLICATION_JSON_VALUE])
+	@GetMapping("/{id}")
 	fun getInformationAboutProduct(
 		@Parameter(description = "id of product to be searched")
 		@PathVariable("id") productUuid: UUID,
@@ -72,7 +72,7 @@ class ProductController(
 		@Parameter(description = "quantity of the product")
 		@RequestParam @Positive quantity: Int,
 		@Parameter(description = "type of the discount policy")
-		@RequestParam @Positive discountPolicyType: DiscountPolicyType,
+		@RequestParam discountPolicyType: DiscountPolicyType,
 	): BigDecimal {
 		val product = productService.getProduct(productUuid)
 			?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Product with id $productUuid not found")
