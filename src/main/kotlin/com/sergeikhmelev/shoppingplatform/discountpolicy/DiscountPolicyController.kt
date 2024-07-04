@@ -35,7 +35,7 @@ class DiscountPolicyController {
 		]
 	)
 	@PostMapping("/update-fixed-percentage-based")
-	fun updateFixedPercentageBased(@Valid @RequestBody discountPolicy: FixedPercentageBasedDiscountPolicy) {
+	fun updateFixedPercentageBased(@Valid @RequestBody discountPolicy: FixedPercentageBasedDiscountPolicyDto) {
 	}
 
 	@Operation(
@@ -51,11 +51,11 @@ class DiscountPolicyController {
 		]
 	)
 	@PostMapping("/update-count-based")
-	fun updateCountBased(@Valid @RequestBody discountPolicy: CountBasedDiscountPolicy) {
+	fun updateCountBased(@Valid @RequestBody discountPolicy: CountBasedDiscountPolicyDto) {
 		discountPolicy.verify()
 	}
 
-	private fun CountBasedDiscountPolicy.verify() {
+	private fun CountBasedDiscountPolicyDto.verify() {
 		val quantities = discounts.map { it.itemQuantity }
 		if (quantities.size != quantities.distinct().size) {
 			throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Item quantities are not set correctly")
@@ -63,13 +63,13 @@ class DiscountPolicyController {
 	}
 }
 
-data class FixedPercentageBasedDiscountPolicy(
+data class FixedPercentageBasedDiscountPolicyDto(
 	@DecimalMin("0")
 	@DecimalMax("50")
-	val percentage: Float,
+	val percentage: Double,
 )
 
-data class CountBasedDiscountPolicy(
+data class CountBasedDiscountPolicyDto(
 	val discounts: List<CountBasedDiscount>,
 )
 
@@ -78,5 +78,5 @@ data class CountBasedDiscount(
 	val itemQuantity: Int,
 	@DecimalMin("0")
 	@DecimalMax("50")
-	val percentage: Float,
+	val percentage: Double,
 )
