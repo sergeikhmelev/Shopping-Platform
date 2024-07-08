@@ -52,6 +52,13 @@ will respond with
 
 ### Improvements
 
+#### Problem with persistance layer
+
+Initially I used https://github.com/vladmihalcea/hypersistence-utils to persist [CountBasedDiscountPolicy.discounts] as a JSON array. 
+But it didn't work with H2 and to save time and don't do major modification of API I decided to replace the DB with list. 
+In retrospective, I should've keep both commits 'perstising layer' and 'revert'. But I've decided to remove them altogether. 
+Now, I do think it wasn't the best decision.
+
 #### Domain
 
 1. Clarify with PO if the product price calculation endpoint is expected to receive a discount policy type as an argument.
